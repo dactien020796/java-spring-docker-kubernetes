@@ -1,10 +1,22 @@
 spring:
   application:
     name: config-server
+# Load from classpath/file system
+#  profiles:
+#    active: native
+#  cloud:
+#    config:
+#      server:
+#        native:
+#          searchLocations: "classpath:/config"
+
+# Load from Github
   profiles:
-    active: native
+    active: git
   cloud:
     config:
       server:
-        native:
-          searchLocations: "classpath:/config"
+        git:
+          uri: https://github.com/dactien020796/java-spring-docker-kubernetes-config-server
+          clone-on-start: true
+          default-label: main
