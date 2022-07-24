@@ -20,3 +20,6 @@ spring:
           uri: https://github.com/dactien020796/java-spring-docker-kubernetes-config-server
           clone-on-start: true
           default-label: main
+
+server:
+  port: 8079
