@@ -17,7 +17,7 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/dactien020796/java-spring-docker-kubernetes-config-server
+          uri: https://github.com/dactien020796/java-spring-docker-kubernetes-config-server.git
           clone-on-start: true
           default-label: main
 

@@ -12,6 +12,17 @@ services:
     mem_limit: 700m
     ports:
       - "8080:8080"
+    depends_on:
+      - config-server
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_CONFIG_IMPORT=configserver:http://config-server:8079
     networks:
       - back-tier
 
@@ -20,6 +31,17 @@ services:
     mem_limit: 700m
     ports:
       - "8081:8081"
+    depends_on:
+      - config-server
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_CONFIG_IMPORT=configserver:http://config-server:8079
     networks:
       - back-tier
 
@@ -28,6 +50,17 @@ services:
     mem_limit: 700m
     ports:
       - "8082:8082"
+    depends_on:
+      - config-server
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_CONFIG_IMPORT=configserver:http://config-server:8079
     networks:
       - back-tier
 

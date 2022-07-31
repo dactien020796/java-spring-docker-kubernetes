@@ -8,7 +8,11 @@ import com.eazybytes.accounts.model.Accounts;
 import com.eazybytes.accounts.model.Customer;
 import com.eazybytes.accounts.repository.AccountsRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
+import java.util.Map;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.SneakyThrows;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,7 +34,8 @@ public class AccountsController {
 	@SneakyThrows
 	@GetMapping
 	public String hello() {
-		return config.getMsg();
+		AccountsController.ServiceConfig serviceConfig = new AccountsController.ServiceConfig(config);
+		return new ObjectMapper().writeValueAsString(serviceConfig);
 	}
 
 	@PostMapping("/myAccount")
@@ -43,6 +48,22 @@ public class AccountsController {
 			return null;
 		}
 
+	}
+
+	@Getter
+	@Setter
+	private static class ServiceConfig {
+		private String msg;
+		private String buildVersion;
+		private Map<String,String> mailDetails;
+		private List<String> activeBranches;
+
+		public ServiceConfig(AccountServiceConfig config) {
+			this.msg = config.getMsg();
+			this.buildVersion = config.getBuildVersion();
+			this.mailDetails = config.getMailDetails();
+			this.activeBranches = config.getActiveBranches();
+		}
 	}
 
 }
