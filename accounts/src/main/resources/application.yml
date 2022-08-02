@@ -19,6 +19,15 @@ spring:
   config:
     import: "optional:configserver:http://localhost:8079"
 
+eureka:
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: http://localhost:8070/eureka/
+  instance:
+    preferIpAddress: true
+
 server:
   port: 8080
 
