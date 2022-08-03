@@ -6,7 +6,10 @@ package com.eazybytes.accounts.controller;
 import com.eazybytes.accounts.config.AccountServiceConfig;
 import com.eazybytes.accounts.model.Accounts;
 import com.eazybytes.accounts.model.Customer;
+import com.eazybytes.accounts.model.CustomerDetails;
 import com.eazybytes.accounts.repository.AccountsRepository;
+import com.eazybytes.accounts.service.clients.CardsFeignClient;
+import com.eazybytes.accounts.service.clients.LoansFeignClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +33,8 @@ public class AccountsController {
 
 	private final AccountsRepository accountsRepository;
 	private final AccountServiceConfig config;
+	private final CardsFeignClient cardsFeignClient;
+	private final LoansFeignClient loansFeignClient;
 
 	@SneakyThrows
 	@GetMapping
@@ -48,6 +53,15 @@ public class AccountsController {
 			return null;
 		}
 
+	}
+
+	@GetMapping("/myCustomerDetails")
+	public CustomerDetails getCustomerDetail(@RequestBody Customer customer) {
+		CustomerDetails customerDetails = new CustomerDetails();
+		customerDetails.setAccounts(accountsRepository.findByCustomerId(customer.getCustomerId()));
+		customerDetails.setLoans(loansFeignClient.getLoansDetail(customer));
+		customerDetails.setCards(cardsFeignClient.getCardsDetail(customer));
+		return customerDetails;
 	}
 
 	@Getter
