@@ -7,6 +7,24 @@ services:
     networks:
       - back-tier
 
+  eureka-server:
+    image: dactien020796/eureka-server-service
+    mem_limit: 700m
+    ports:
+      - "8070:8070"
+    depends_on:
+      - config-server
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+        window: 120s
+    environment:
+      SPRING_CONFIG_IMPORT: configserver:http://config-server:8079
+    networks:
+      - back-tier
+
   accounts:
     image: dactien020796/accounts-service
     mem_limit: 700m
@@ -14,15 +32,17 @@ services:
       - "8080:8080"
     depends_on:
       - config-server
+      - eureka-server
     deploy:
       restart_policy:
         condition: on-failure
-        delay: 5s
+        delay: 20s
         max_attempts: 3
         window: 120s
     environment:
-      - SPRING_PROFILES_ACTIVE=dev
-      - SPRING_CONFIG_IMPORT=configserver:http://config-server:8079
+      SPRING_PROFILES_ACTIVE: dev
+      SPRING_CONFIG_IMPORT: configserver:http://config-server:8079
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8070/eureka/
     networks:
       - back-tier
 
@@ -33,15 +53,17 @@ services:
       - "8081:8081"
     depends_on:
       - config-server
+      - eureka-server
     deploy:
       restart_policy:
         condition: on-failure
-        delay: 5s
+        delay: 20s
         max_attempts: 3
         window: 120s
     environment:
-      - SPRING_PROFILES_ACTIVE=dev
-      - SPRING_CONFIG_IMPORT=configserver:http://config-server:8079
+      SPRING_PROFILES_ACTIVE: dev
+      SPRING_CONFIG_IMPORT: configserver:http://config-server:8079
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8070/eureka/
     networks:
       - back-tier
 
@@ -52,15 +74,17 @@ services:
       - "8082:8082"
     depends_on:
       - config-server
+      - eureka-server
     deploy:
       restart_policy:
         condition: on-failure
-        delay: 5s
+        delay: 20s
         max_attempts: 3
         window: 120s
     environment:
-      - SPRING_PROFILES_ACTIVE=dev
-      - SPRING_CONFIG_IMPORT=configserver:http://config-server:8079
+      SPRING_PROFILES_ACTIVE: dev
+      SPRING_CONFIG_IMPORT: configserver:http://config-server:8079
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8070/eureka/
     networks:
       - back-tier
 
