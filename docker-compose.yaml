@@ -88,5 +88,29 @@ services:
     networks:
       - back-tier
 
+  gateway-server:
+    image: dactien020796/gateway-server-service
+    mem_limit: 700m
+    ports:
+      - "8000:8000"
+    depends_on:
+      - config-server
+      - eureka-server
+      - accounts
+      - loans
+      - cards
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 20s
+        max_attempts: 3
+        window: 120s
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      SPRING_CONFIG_IMPORT: configserver:http://config-server:8079
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8070/eureka/
+    networks:
+      - back-tier
+
 networks:
   back-tier: {}
