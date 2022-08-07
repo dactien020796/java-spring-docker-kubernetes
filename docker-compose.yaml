@@ -1,9 +1,22 @@
 services:
+
+  zipkin:
+    image: openzipkin/zipkin
+    mem_limit: 700m
+    ports:
+      - "9411:9411"
+    networks:
+      - back-tier
+
   config-server:
     image: dactien020796/config-server-service
     mem_limit: 700m
     ports:
       - "8079:8079"
+    depends_on:
+      - zipkin
+    environment:
+      SPRING_ZIPKIN_BASEURL: http://zipkin:9411
     networks:
       - back-tier
 
@@ -17,11 +30,12 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
-        delay: 10s
+        delay: 20s
         max_attempts: 3
         window: 120s
     environment:
       SPRING_CONFIG_IMPORT: configserver:http://config-server:8079
+      SPRING_ZIPKIN_BASEURL: http://zipkin:9411
     networks:
       - back-tier
 
@@ -43,6 +57,7 @@ services:
       SPRING_PROFILES_ACTIVE: dev
       SPRING_CONFIG_IMPORT: configserver:http://config-server:8079
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8070/eureka/
+      SPRING_ZIPKIN_BASEURL: http://zipkin:9411
     networks:
       - back-tier
 
@@ -64,6 +79,7 @@ services:
       SPRING_PROFILES_ACTIVE: dev
       SPRING_CONFIG_IMPORT: configserver:http://config-server:8079
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8070/eureka/
+      SPRING_ZIPKIN_BASEURL: http://zipkin:9411
     networks:
       - back-tier
 
@@ -85,6 +101,7 @@ services:
       SPRING_PROFILES_ACTIVE: dev
       SPRING_CONFIG_IMPORT: configserver:http://config-server:8079
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8070/eureka/
+      SPRING_ZIPKIN_BASEURL: http://zipkin:9411
     networks:
       - back-tier
 
@@ -109,6 +126,7 @@ services:
       SPRING_PROFILES_ACTIVE: dev
       SPRING_CONFIG_IMPORT: configserver:http://config-server:8079
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8070/eureka/
+      SPRING_ZIPKIN_BASEURL: http://zipkin:9411
     networks:
       - back-tier
 

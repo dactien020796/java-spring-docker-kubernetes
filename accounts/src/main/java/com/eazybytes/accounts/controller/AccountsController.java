@@ -62,10 +62,12 @@ public class AccountsController {
 	@GetMapping("/myCustomerDetails")
 	@CircuitBreaker(name = "getCustomerDetail", fallbackMethod = "fallbackCustomerDetail")
 	public CustomerDetails getCustomerDetail(@RequestBody Customer customer) {
+		log.info("getCustomerDetail() start...");
 		CustomerDetails customerDetails = new CustomerDetails();
 		customerDetails.setAccounts(accountsRepository.findByCustomerId(customer.getCustomerId()));
 		customerDetails.setLoans(loansFeignClient.getLoansDetail(customer));
 		customerDetails.setCards(cardsFeignClient.getCardsDetail(customer));
+		log.info("getCustomerDetail() end...");
 		return customerDetails;
 	}
 
