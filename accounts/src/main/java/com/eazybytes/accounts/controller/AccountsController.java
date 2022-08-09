@@ -11,6 +11,7 @@ import com.eazybytes.accounts.repository.AccountsRepository;
 import com.eazybytes.accounts.service.clients.CardsFeignClient;
 import com.eazybytes.accounts.service.clients.LoansFeignClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.micrometer.core.annotation.Timed;
 import java.util.List;
 import java.util.Map;
 
@@ -48,6 +49,7 @@ public class AccountsController {
 	}
 
 	@PostMapping("/myAccount")
+	@Timed(value = "getAccountDetails.time", description = "Time taken to return getAccountDetails")
 	public Accounts getAccountDetails(@RequestBody Customer customer) {
 
 		Accounts accounts = accountsRepository.findByCustomerId(customer.getCustomerId());

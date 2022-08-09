@@ -1,5 +1,26 @@
 services:
 
+  grafana:
+    image: "grafana/grafana:latest"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=password
+    networks:
+      - back-tier
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - back-tier
+
   zipkin:
     image: openzipkin/zipkin
     mem_limit: 700m

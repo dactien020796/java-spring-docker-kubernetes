@@ -41,7 +41,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: refresh
+        include: "*"
 
 resilience4j:
   circuitbreaker:
