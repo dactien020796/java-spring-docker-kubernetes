@@ -1,0 +1,6 @@
+global:
+  configMapName: dev-configmap
+  zipkinBaseURL: http://zipkin-service:9411/
+  activeProfile: dev
+  configServerURL: configserver:http://configserver-service:8079/
+  eurekaServerURL: http://eurekaserver-service:8070/eureka/

@@ -1,0 +1,27 @@
+dependencies:
+- name: sample-chart-common
+  repository: file://../../sample-chart-common
+  version: 0.1.0
+- name: accounts
+  repository: file://../../sample-chart-services/accounts
+  version: 0.1.0
+- name: cards
+  repository: file://../../sample-chart-services/cards
+  version: 0.1.0
+- name: config-server
+  repository: file://../../sample-chart-services/config-server
+  version: 0.1.0
+- name: eureka-server
+  repository: file://../../sample-chart-services/eureka-server
+  version: 0.1.0
+- name: gateway-server
+  repository: file://../../sample-chart-services/gateway-server
+  version: 0.1.0
+- name: loans
+  repository: file://../../sample-chart-services/loans
+  version: 0.1.0
+- name: zipkin
+  repository: file://../../sample-chart-services/zipkin
+  version: 0.1.0
+digest: sha256:405535a04edce74957e60d69256a4f4fee4de5245861b695890714a45b13a347
+generated: "2022-08-22T20:28:13.833538+07:00"

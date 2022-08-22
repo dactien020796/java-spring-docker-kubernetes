@@ -1,0 +1,6 @@
+dependencies:
+- name: sample-chart-common
+  repository: file://../../sample-chart-common
+  version: 0.1.0
+digest: sha256:fd294b075e1eb31e8bb8c7caec4f6ce94661cdc3ce49b86f3c4997088b6a34df
+generated: "2022-08-21T19:37:30.24606+07:00"
