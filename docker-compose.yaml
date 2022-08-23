@@ -1,5 +1,15 @@
 services:
 
+  keycloak:
+    image: "quay.io/keycloak/keycloak:19.0.1"
+    ports:
+      - "7080:8080"
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    networks:
+      - back-tier
+
   grafana:
     image: "grafana/grafana:latest"
     ports:
@@ -7,8 +17,8 @@ services:
     depends_on:
       - prometheus
     environment:
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=password
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: password
     networks:
       - back-tier
 
