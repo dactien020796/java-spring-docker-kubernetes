@@ -4,3 +4,4 @@ global:
   activeProfile: dev
   configServerURL: configserver:http://configserver-service:8079/
   eurekaServerURL: http://eurekaserver-service:8070/eureka/
+  keyCloakURL: http://keycloak:80/realms/master/protocol/openid-connect/certs
