@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.example.experiment.util.SortingUtil.buildSort;
+
 @RestController
 @RequestMapping("/students")
 @AllArgsConstructor
@@ -27,9 +29,13 @@ public class StudentController {
     @GetMapping
     public ResponseEntity<?> findAll(
             @RequestParam(defaultValue = "5", required = false) Integer size,
-            @RequestParam(defaultValue = "0", required = false) Integer page) {
-        Pageable pageable = PageRequest.of(page, size);
+            @RequestParam(defaultValue = "0", required = false) Integer page,
+            @RequestParam(defaultValue = "id:desc") String[] sorts) {
+        Pageable pageable = PageRequest.of(page, size, buildSort(sorts));
         Page<?> result =  studentService.findAll(pageable);
+        if (result.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
 
         Map<String, Object> response = new HashMap<>();
         response.put("students", result.getContent());
