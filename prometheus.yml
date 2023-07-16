@@ -2,15 +2,15 @@ global:
   scrape_interval:     5s # Set the scrape interval to every 5 seconds.
   evaluation_interval: 5s # Evaluate rules every 5 seconds.
 scrape_configs:
-  - job_name: 'accounts'
+  - job_name: 'account-service-scraper'
     metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: ['accounts:8080']
-  - job_name: 'loans'
+      - targets: ['account-service:8080']
+  - job_name: 'card-service-scraper'
     metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: ['loans:8090']
-  - job_name: 'cards'
+      - targets: ['card-service:8081']
+  - job_name: 'loan-service-scraper'
     metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: ['cards:9000']
+      - targets: ['loan-service:8082']

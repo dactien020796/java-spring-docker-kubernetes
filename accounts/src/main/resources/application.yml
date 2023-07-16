@@ -1,6 +1,6 @@
 spring:
   application:
-    name: accounts
+    name: account-service
   datasource:
     username: sa
     url: jdbc:h2:mem:testdb
@@ -13,28 +13,32 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: update
-    show-sql: true
-  profiles:
-    active: dev
-  config:
-    import: "optional:configserver:http://localhost:8079"
+    show-sql: false
+#  profiles:
+#    active: dev
+#  config:
+#    import: "optional:configserver:http://localhost:8079"
   sleuth:
     sampler:
       percentage: 1
   zipkin:
     base-url: http://localhost:9411
 
-eureka:
-  client:
-    registerWithEureka: true
-    fetchRegistry: true
-    serviceUrl:
-      defaultZone: http://localhost:8070/eureka/
-  instance:
-    preferIpAddress: true
+#eureka:
+#  client:
+#    registerWithEureka: true
+#    fetchRegistry: true
+#    serviceUrl:
+#      defaultZone: http://localhost:8070/eureka/
+#  instance:
+#    preferIpAddress: true
 
 server:
   port: 8080
+
+urls:
+  card-service: http://localhost:8081
+  loan-service: http://localhost:8082
 
 # Enable refresh config changes
 management:

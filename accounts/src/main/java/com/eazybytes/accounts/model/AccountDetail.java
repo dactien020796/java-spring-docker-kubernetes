@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class CustomerDetails {
+public class AccountDetail {
 
     private Accounts accounts;
     private List<Loans> loans;

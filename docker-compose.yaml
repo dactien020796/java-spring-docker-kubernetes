@@ -1,46 +1,5 @@
 services:
 
-  keycloak:
-    image: "quay.io/keycloak/keycloak:19.0.1"
-    ports:
-      - "7080:8080"
-    environment:
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
-    command:
-      - start-dev
-    networks:
-      - back-tier
-
-#  grafana:
-#    image: "grafana/grafana:latest"
-#    ports:
-#      - "3000:3000"
-#    depends_on:
-#      - prometheus
-#    environment:
-#      GF_SECURITY_ADMIN_USER: admin
-#      GF_SECURITY_ADMIN_PASSWORD: password
-#    networks:
-#      - back-tier
-#
-#  prometheus:
-#    image: prom/prometheus:latest
-#    ports:
-#      - "9090:9090"
-#    volumes:
-#      - ./prometheus.yml:/etc/prometheus/prometheus.yml
-#    networks:
-#      - back-tier
-
-  zipkin:
-    image: openzipkin/zipkin
-    mem_limit: 700m
-    ports:
-      - "9411:9411"
-    networks:
-      - back-tier
-#
 #  config-server:
 #    image: dactien020796/config-server-service
 #    mem_limit: 700m
@@ -49,91 +8,6 @@ services:
 #    depends_on:
 #      - zipkin
 #    environment:
-#      SPRING_ZIPKIN_BASEURL: http://zipkin:9411
-#    networks:
-#      - back-tier
-#
-#  eureka-server:
-#    image: dactien020796/eureka-server-service
-#    mem_limit: 700m
-#    ports:
-#      - "8070:8070"
-#    depends_on:
-#      - config-server
-#    deploy:
-#      restart_policy:
-#        condition: on-failure
-#        delay: 20s
-#        max_attempts: 3
-#        window: 120s
-#    environment:
-#      SPRING_CONFIG_IMPORT: configserver:http://config-server:8079
-#      SPRING_ZIPKIN_BASEURL: http://zipkin:9411
-#    networks:
-#      - back-tier
-#
-#  accounts:
-#    image: dactien020796/accounts-service
-#    mem_limit: 700m
-#    ports:
-#      - "8080:8080"
-#    depends_on:
-#      - config-server
-#      - eureka-server
-#    deploy:
-#      restart_policy:
-#        condition: on-failure
-#        delay: 20s
-#        max_attempts: 3
-#        window: 120s
-#    environment:
-#      SPRING_PROFILES_ACTIVE: dev
-#      SPRING_CONFIG_IMPORT: configserver:http://config-server:8079
-#      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8070/eureka/
-#      SPRING_ZIPKIN_BASEURL: http://zipkin:9411
-#    networks:
-#      - back-tier
-#
-#  loans:
-#    image: dactien020796/loans-service
-#    mem_limit: 700m
-#    ports:
-#      - "8081:8081"
-#    depends_on:
-#      - config-server
-#      - eureka-server
-#    deploy:
-#      restart_policy:
-#        condition: on-failure
-#        delay: 20s
-#        max_attempts: 3
-#        window: 120s
-#    environment:
-#      SPRING_PROFILES_ACTIVE: dev
-#      SPRING_CONFIG_IMPORT: configserver:http://config-server:8079
-#      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8070/eureka/
-#      SPRING_ZIPKIN_BASEURL: http://zipkin:9411
-#    networks:
-#      - back-tier
-#
-#  cards:
-#    image: dactien020796/cards-service
-#    mem_limit: 700m
-#    ports:
-#      - "8082:8082"
-#    depends_on:
-#      - config-server
-#      - eureka-server
-#    deploy:
-#      restart_policy:
-#        condition: on-failure
-#        delay: 20s
-#        max_attempts: 3
-#        window: 120s
-#    environment:
-#      SPRING_PROFILES_ACTIVE: dev
-#      SPRING_CONFIG_IMPORT: configserver:http://config-server:8079
-#      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8070/eureka/
 #      SPRING_ZIPKIN_BASEURL: http://zipkin:9411
 #    networks:
 #      - back-tier
@@ -163,5 +37,112 @@ services:
 #    networks:
 #      - back-tier
 
+  account-service:
+    build:
+      context: ./accounts
+      dockerfile: Dockerfile
+    user: root
+    ports:
+      - "8080:8080"
+    environment:
+      LOGGING_FILE_NAME: /logs/account-service.log
+      SPRING_ZIPKIN_BASEURL: http://zipkin:9411
+      URLS_CARD_SERVICE: http://card-service:8081
+      URLS_LOAN_SERVICE: http://loan-service:8082
+    networks:
+      - back-tier
+    volumes:
+      - log_volume:/logs
+
+  card-service:
+    build:
+      context: ./cards
+      dockerfile: Dockerfile
+    user: root
+    ports:
+      - "8081:8081"
+    environment:
+      LOGGING_FILE_NAME: /logs/card-service.log
+      SPRING_ZIPKIN_BASEURL: http://zipkin:9411
+    networks:
+      - back-tier
+    volumes:
+      - log_volume:/logs
+
+  loan-service:
+    build:
+      context: ./loans
+      dockerfile: Dockerfile
+    user: root
+    ports:
+      - "8082:8082"
+    environment:
+      LOGGING_FILE_NAME: /logs/loan-service.log
+      SPRING_ZIPKIN_BASEURL: http://zipkin:9411
+    networks:
+      - back-tier
+    volumes:
+      - log_volume:/logs
+
+### TODO: Infra containers
+
+  grafana:
+    image: "grafana/grafana:latest"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=password
+    networks:
+      - back-tier
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - back-tier
+
+  zipkin:
+    image: openzipkin/zipkin
+    mem_limit: 700m
+    ports:
+      - "9411:9411"
+    networks:
+      - back-tier
+
+  splunk:
+    image: splunk/splunk:8.0
+    hostname: splunk
+    environment:
+      - SPLUNK_START_ARGS=--accept-license
+      - SPLUNK_USER=root
+      - SPLUNK_ENABLE_LISTEN=9997
+      - SPLUNK_PASSWORD=password
+    ports:
+      - "8000:8000"
+
+  splunkforwarder:
+    image: splunk/universalforwarder:8.0
+    hostname: splunkforwarder
+    environment:
+      - SPLUNK_START_ARGS=--accept-license --answer-yes
+      - SPLUNK_STANDALONE_URL=splunk:9997
+      - SPLUNK_USER=root
+      - SPLUNK_ADD=monitor /logs
+      - SPLUNK_PASSWORD=password
+    restart: always
+    depends_on:
+      - splunk
+    volumes:
+      - log_volume:/logs
+
 networks:
   back-tier: {}
+
+volumes:
+  log_volume:

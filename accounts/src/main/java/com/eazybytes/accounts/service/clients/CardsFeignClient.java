@@ -1,16 +1,16 @@
 package com.eazybytes.accounts.service.clients;
 
 import com.eazybytes.accounts.model.Cards;
-import com.eazybytes.accounts.model.Customer;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-@FeignClient("cards")
+@FeignClient(name = "cardClient", url = "${urls.card-service}")
 public interface CardsFeignClient {
 
-    @PostMapping("/myCards")
-    List<Cards> getCardsDetail(@RequestBody Customer customer);
+    @GetMapping("/cards")
+    List<Cards> getCardsDetail(@RequestParam int customerId);
 }
